@@ -1,0 +1,7 @@
+#spring:
+#  security:
+#    user:
+#      # 修改默认用户名密码信息
+#      name: admin
+#      password: admin
+#      roles: ['admin','user']
