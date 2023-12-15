@@ -14,7 +14,7 @@ class Security01ApplicationTests {
 	void contextLoads() {
 		//生成密码加密后的字符串
 		String pwd = "pwd";
-		passwordEncoder.encode(pwd);
+		System.out.println(passwordEncoder.encode(pwd));
 	}
 
 }

@@ -28,11 +28,11 @@ public class SecurityConfig {
          * UserDetail
          */
         UserDetails adminUser = User.withUsername("zhangsan")
-                .password("$2a$10$khIDIrhFjJDMaj55fkRd/uzBvOJgOsi6CIWcDg95RWnl2OiVDaXe6")
+                .password("$2a$10$6w8AAhUcRr7icQTxtauGE.G/xh9Gt7j6w/kSGLQoc5TkNlMRzF6E2")
                 .roles("admin", "user")
                 .build();
         UserDetails vipUser = User.withUsername("lisi")
-                .password("$2a$10$khIDIrhFjJDMaj55fkRd/uzBvOJgOsi6CIWcDg95RWnl2OiVDaXe6")
+                .password("$2a$10$6w8AAhUcRr7icQTxtauGE.G/xh9Gt7j6w/kSGLQoc5TkNlMRzF6E2")
                 .roles("user")
                 .build();
         //将用户信息存储到SpringSecurity中
@@ -50,6 +50,15 @@ public class SecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
         httpSecurity.authorizeHttpRequests(auth -> auth.requestMatchers("/toLogin").permitAll()
                 .anyRequest().authenticated());
+        //基于表单登录
+        httpSecurity.formLogin(form -> form
+                .loginPage("/toLogin")
+                .loginProcessingUrl("/doLogin") // 处理前端登录请求
+                .usernameParameter("username")
+                .passwordParameter("password")
+                .defaultSuccessUrl("/index")
+                .failureUrl("/toLogin?error")
+                .failureForwardUrl("/toLogin"));
         return httpSecurity.build();
     }
 
