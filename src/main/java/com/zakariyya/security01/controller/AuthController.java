@@ -19,6 +19,7 @@ public class AuthController {
      */
     @PostMapping("login")
     public String login(@RequestBody LoginParam loginParam){
+
         return userService.login(loginParam);
     }
 }

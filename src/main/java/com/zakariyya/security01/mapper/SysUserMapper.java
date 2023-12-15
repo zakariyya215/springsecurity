@@ -1,7 +1,11 @@
 package com.zakariyya.security01.mapper;
 
+import com.zakariyya.security01.domain.Role;
 import com.zakariyya.security01.domain.SysUser;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
 * @author zakariyya
@@ -11,6 +15,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface SysUserMapper extends BaseMapper<SysUser> {
 
+    List<Role> getUsersByUsername(@Param("username") String username);
 }
 
 

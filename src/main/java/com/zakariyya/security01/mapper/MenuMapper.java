@@ -2,6 +2,9 @@ package com.zakariyya.security01.mapper;
 
 import com.zakariyya.security01.domain.Menu;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
 * @author zakariyya
@@ -11,6 +14,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface MenuMapper extends BaseMapper<Menu> {
 
+    List<String> getPermissionsByRoleIds(@Param("roleIdList") List<Long> roleIdList);
 }
 
 

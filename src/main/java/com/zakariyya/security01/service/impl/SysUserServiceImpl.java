@@ -7,8 +7,10 @@ import com.zakariyya.security01.service.SysUserService;
 import com.zakariyya.security01.mapper.SysUserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -27,12 +29,19 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
     public SysUserServiceImpl(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
-
+    //间接调用loadUserByUsername方法
     @Override
     public String login(LoginParam loginParam) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginParam.getUsername(), loginParam.getPassword());
         //会自动调用loadUserByUsername方法，返回的结果就是UserDetails
-        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+        Authentication authenticate = null;
+
+        try {
+            authenticate = authenticationManager.authenticate(authenticationToken);
+        } catch (AuthenticationException e) {
+            log.error("用户名或密码错误");
+            return "";
+        }
         SysUser user = (SysUser) authenticate.getPrincipal();
         //生成一个Token返回给前端
         String token = UUID.randomUUID().toString().replace("-", "");

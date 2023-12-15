@@ -1,8 +1,10 @@
 package com.zakariyya.security01.config;
 
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
@@ -26,12 +28,12 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    private final SysUserDetailService userDetailsService;
 
-    private final UserDetailsService userDetailsService;
-
-    public SecurityConfig(UserDetailsService userDetailsService) {
+    public SecurityConfig(@Lazy SysUserDetailService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
+
 
 //    @Bean
 //    public UserDetailsService userDetailsService() {
@@ -84,6 +86,8 @@ public class SecurityConfig {
 //        return httpSecurity.build();
         httpSecurity.authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**").permitAll()
                 .anyRequest().authenticated());
+//        httpSecurity.formLogin(form -> form.failureUrl("/auth/login")
+//                .failureForwardUrl("/auth/login"));
         return httpSecurity.build();
     }
     @Bean

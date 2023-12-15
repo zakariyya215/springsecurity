@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Set;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -111,6 +112,12 @@ public class SysUser implements Serializable, UserDetails {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+
+    //角色的信息
+    private Set<Role> roleSet;
+
+    //权限的信息
+    private Set<String> permissions;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

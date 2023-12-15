@@ -29,4 +29,11 @@
         creator,create_time,updater,
         update_time,remark,deleted
     </sql>
+    <select id="getUsersByUsername" resultType="com.zakariyya.security01.domain.Role">
+        select ums_role.*
+        from ums_sys_user
+        left join ums_sys_user_role on ums_sys_user.id = ums_sys_user_role.user_id
+        left join ums_role on ums_sys_user_role.role_id = ums_role.role_id
+        where ums_sys_user.username = #{username} and ums_role.deleted = 0 and ums_sys_user.deleted = 0;
+    </select>
 </mapper>

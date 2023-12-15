@@ -8,7 +8,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://frp-arm.top:54942/security?useUnicode=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://frp-arm.top:54942/security?useUnicode=true&serverTimezone=Asia/Shanghai&useSSL=false
     username: root
     password: 12345678
 mybatis-plus:
