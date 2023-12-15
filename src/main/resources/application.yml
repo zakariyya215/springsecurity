@@ -11,3 +11,11 @@ spring:
     url: jdbc:mysql://localhost:3306/security?useUnicode=true&serverTimezone=Asia/Shanghai
     username: root
     password: 12345678
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      logic-not-delete-value: 0
+      logic-delete-value: 1
+  configuration:
+    log-impl: org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl

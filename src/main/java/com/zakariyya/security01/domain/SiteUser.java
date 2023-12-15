@@ -6,19 +6,15 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Collection;
-
 import lombok.Data;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 /**
- * 后台用户表
- * @TableName ums_sys_user
+ * 外部用户表
+ * @TableName ums_site_user
  */
-@TableName(value ="ums_sys_user")
+@TableName(value ="ums_site_user")
 @Data
-public class SysUser implements Serializable, UserDetails {
+public class SiteUser implements Serializable {
     /**
      * 用户ID
      */
@@ -36,6 +32,12 @@ public class SysUser implements Serializable, UserDetails {
      */
     @TableField(value = "nickname")
     private String nickname;
+
+    /**
+     * 微信openid
+     */
+    @TableField(value = "openid")
+    private String openid;
 
     /**
      * 用户邮箱
@@ -74,12 +76,6 @@ public class SysUser implements Serializable, UserDetails {
     private Integer status;
 
     /**
-     * 创建者
-     */
-    @TableField(value = "creator")
-    private Long creator;
-
-    /**
      * 创建时间
      */
     @TableField(value = "create_time")
@@ -111,29 +107,4 @@ public class SysUser implements Serializable, UserDetails {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return status.equals(0);
-    }
 }
