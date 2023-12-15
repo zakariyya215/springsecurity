@@ -29,7 +29,8 @@ public class SecurityConfig {
          */
         UserDetails adminUser = User.withUsername("zhangsan")
                 .password("$2a$10$6w8AAhUcRr7icQTxtauGE.G/xh9Gt7j6w/kSGLQoc5TkNlMRzF6E2")
-                .roles("admin", "user")
+                .roles("admin")
+                .authorities("test:show")
                 .build();
         UserDetails vipUser = User.withUsername("lisi")
                 .password("$2a$10$6w8AAhUcRr7icQTxtauGE.G/xh9Gt7j6w/kSGLQoc5TkNlMRzF6E2")
@@ -48,7 +49,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
+        //配置请求拦截方式
+        /**
+         * requestMatchers 匹配资源路径
+         * permitAll 所有人允许访问
+         * anyRequest 所有其他请求
+         * authenticated 必须经过认证才可访问
+         */
         httpSecurity.authorizeHttpRequests(auth -> auth.requestMatchers("/toLogin").permitAll()
+                .requestMatchers("test").hasAuthority("test:show")
                 .anyRequest().authenticated());
         //基于表单登录
         httpSecurity.formLogin(form -> form
