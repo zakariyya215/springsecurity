@@ -15,7 +15,7 @@ import java.util.List;
 */
 public interface SysUserMapper extends BaseMapper<SysUser> {
 
-    List<Role> getUsersByUsername(@Param("username") String username);
+    SysUser getUsersByUsername(@Param("username") String username);
 }
 
 

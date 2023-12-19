@@ -18,4 +18,4 @@ mybatis-plus:
       logic-not-delete-value: 0
       logic-delete-value: 1
   configuration:
-    log-impl: org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

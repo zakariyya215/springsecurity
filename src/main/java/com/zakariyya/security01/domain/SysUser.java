@@ -6,11 +6,16 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**
@@ -121,6 +126,9 @@ public class SysUser implements Serializable, UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (CollectionUtils.isNotEmpty(permissions)){
+            return permissions.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
+        }
         return null;
     }
 

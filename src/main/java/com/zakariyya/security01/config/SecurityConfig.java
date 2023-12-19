@@ -1,5 +1,6 @@
 package com.zakariyya.security01.config;
 
+import com.zakariyya.security01.filter.JwtAuthenticationFilter;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * 配置类的变化,多使用Lambda实现
@@ -29,9 +31,11 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
     private final SysUserDetailService userDetailsService;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(@Lazy SysUserDetailService userDetailsService) {
+    public SecurityConfig(@Lazy SysUserDetailService userDetailsService, JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.userDetailsService = userDetailsService;
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
 
@@ -88,6 +92,8 @@ public class SecurityConfig {
                 .anyRequest().authenticated());
 //        httpSecurity.formLogin(form -> form.failureUrl("/auth/login")
 //                .failureForwardUrl("/auth/login"));
+        //将自定义的OncePerRequestFilter添加到过滤器链
+        httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
     @Bean

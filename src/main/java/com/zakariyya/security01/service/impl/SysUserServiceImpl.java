@@ -5,6 +5,7 @@ import com.zakariyya.security01.domain.SysUser;
 import com.zakariyya.security01.dto.LoginParam;
 import com.zakariyya.security01.service.SysUserService;
 import com.zakariyya.security01.mapper.SysUserMapper;
+import com.zakariyya.security01.util.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -13,6 +14,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -25,17 +28,18 @@ import java.util.UUID;
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
     implements SysUserService{
     private final AuthenticationManager authenticationManager;
+    private final JwtUtils jwtUtils;
 
-    public SysUserServiceImpl(AuthenticationManager authenticationManager) {
+    public SysUserServiceImpl(AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
         this.authenticationManager = authenticationManager;
+        this.jwtUtils = jwtUtils;
     }
     //间接调用loadUserByUsername方法
     @Override
     public String login(LoginParam loginParam) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginParam.getUsername(), loginParam.getPassword());
         //会自动调用loadUserByUsername方法，返回的结果就是UserDetails
-        Authentication authenticate = null;
-
+        Authentication authenticate;
         try {
             authenticate = authenticationManager.authenticate(authenticationToken);
         } catch (AuthenticationException e) {
@@ -43,9 +47,16 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser>
             return "";
         }
         SysUser user = (SysUser) authenticate.getPrincipal();
+        if (user == null){
+            return "";
+        }
+        Map<String,Object> tokenMap = new HashMap<>();
+        tokenMap.put("id",user.getId());
+        tokenMap.put("username",user.getUsername());
+        tokenMap.put("perms",user.getPermissions());
         //生成一个Token返回给前端
-        String token = UUID.randomUUID().toString().replace("-", "");
-        log.info("登录的用户信息:{}",user);
+        String token = jwtUtils.generateToken(tokenMap);
+        log.info("登录的用户信息:{}",token);
         return token;
     }
 }

@@ -16,3 +16,17 @@ services:
       - "/root/mysql/data:/var/lib/mysql"
       # 挂载配置文件目录
       - "/root/mysql/config:/etc/mysql/conf.d"
+  redis:
+    image: redis:latest
+    restart: always
+    hostname: redis
+    container_name: redis
+    privileged: true
+    ports:
+      - 6379:6379
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - ./data:/usr/local/redis/data
+      - ./conf/redis.conf:/usr/local/redis/conf/redis.conf
+      - ./logs:/usr/local/redis/logs

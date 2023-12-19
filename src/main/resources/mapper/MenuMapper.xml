@@ -24,14 +24,24 @@
         menu_type,icon,deleted,
         create_time,update_time
     </sql>
-    <select id="getPermissionsByRoleIds" resultType="java.lang.String">
-        select *
+    <select id="getPermissionsByRoleIds" resultType="com.zakariyya.security01.domain.Menu">
+        select ums_menu.id,
+               ums_menu.parent_id,
+               ums_menu.menu_name,
+               ums_menu.path,
+               ums_menu.sort,
+               ums_menu.perms,
+               ums_menu.menu_type,
+               ums_menu.icon,
+               ums_menu.deleted,
+               ums_menu.create_time,
+               ums_menu.update_time
         from ums_role
-        left join ums_role_menu on ums_role.role_id = ums_role_menu.role_id
-        left join ums_menu on ums_role_menu.menu_id = ums_menu.id
+        right join ums_role_menu on ums_role.role_id = ums_role_menu.role_id
+        right join ums_menu on ums_role_menu.menu_id = ums_menu.id
         where ums_role.role_id in
         <foreach collection="roleIdList" item="item" open="(" close=")" separator=",">
-            #item
+            #{item}
         </foreach>;
     </select>
 </mapper>
