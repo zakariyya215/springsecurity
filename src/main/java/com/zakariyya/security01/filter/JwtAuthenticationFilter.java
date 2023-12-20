@@ -2,22 +2,23 @@ package com.zakariyya.security01.filter;
 
 import com.zakariyya.security01.domain.SysUser;
 import com.zakariyya.security01.util.JwtUtils;
+import com.zakariyya.security01.util.UserThreadLocalHolder;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 捕获请求中的请求头，判断是否可以获取到用户信息
@@ -55,11 +56,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         user.setId(id);
         user.setUsername(username);
         user.setPermissions(permsSet);
-        System.out.println(user);
 //        throw new BadCredentialsException("登录暂停");
         //获取到用户信息后，需要将用户信息告知SpringSecurity，SpringSecurity会判断是否包含接口权限
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        UserThreadLocalHolder.remove();
         //放行
         doFilter(request, response, filterChain);
     }

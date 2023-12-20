@@ -5,12 +5,33 @@
 #      name: admin
 #      password: admin
 #      roles: ['admin','user']
+
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://frp-arm.top:54942/security?useUnicode=true&serverTimezone=Asia/Shanghai&useSSL=false
     username: root
     password: 12345678
+    #OAuth2配置
+  security:
+    oauth2:
+      client:
+        registration:
+          gitee:
+            client-id: 9475ed28911d3e6ffbcae5efcf5a1a3761eed5a836350d2de1feeb66fa2a994c
+            client-secret: c8eac20872b7b79ade9b727123cf2431984a82a207cda10bd8ed3dff440cdb14
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8080/oauth/notify
+            scope:
+              - user_info #个人用户信息
+        provider:
+          gitee:
+            authorization-uri: https://gitee.com/oauth/authorize
+            token-uri: https://gitee.com/oauth/token
+            user-info-uri: https://gitee.com/api/v5/user
+            user-name-attribute: name
+
+
 mybatis-plus:
   global-config:
     db-config:

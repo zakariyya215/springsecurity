@@ -23,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * 配置类的变化,多使用Lambda实现
@@ -32,10 +33,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final SysUserDetailService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final ManualAuthorizationManager manualAuthorizationManager;
 
-    public SecurityConfig(@Lazy SysUserDetailService userDetailsService, JwtAuthenticationFilter jwtAuthenticationFilter) {
+    public SecurityConfig(@Lazy SysUserDetailService userDetailsService, JwtAuthenticationFilter jwtAuthenticationFilter, ManualAuthorizationManager manualAuthorizationManager) {
         this.userDetailsService = userDetailsService;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.manualAuthorizationManager = manualAuthorizationManager;
     }
 
 
@@ -88,8 +91,9 @@ public class SecurityConfig {
 //                .failureUrl("/toLogin?error")
 //                .failureForwardUrl("/toLogin"));
 //        return httpSecurity.build();
-        httpSecurity.authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**").permitAll()
-                .anyRequest().authenticated());
+        httpSecurity.authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**","/favicon.ico","/oauth/notify").permitAll()
+                .anyRequest().access(manualAuthorizationManager));
+        httpSecurity.oauth2Login(Customizer.withDefaults());
 //        httpSecurity.formLogin(form -> form.failureUrl("/auth/login")
 //                .failureForwardUrl("/auth/login"));
         //将自定义的OncePerRequestFilter添加到过滤器链
@@ -102,5 +106,9 @@ public class SecurityConfig {
         authenticationProvider.setUserDetailsService(userDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder);
         return new ProviderManager(authenticationProvider);
+    }
+    @Bean
+    public RestTemplate restTemplate(){
+        return new RestTemplate();
     }
 }
